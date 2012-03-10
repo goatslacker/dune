@@ -12,7 +12,10 @@
     "prepublish": "cake build"
   },
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "vows": "latest",
+    "coffee-script": "latest"
+  },
   "optionalDependencies": {},
   "engines": {
     "node": "*"
