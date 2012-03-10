@@ -8,6 +8,9 @@
     "url": "git://github.com/goatslacker/dune.git"
   },
   "main": "lib/dune.js",
+  "scripts": {
+    "prepublish": "cake build"
+  },
   "dependencies": {},
   "devDependencies": {},
   "optionalDependencies": {},
