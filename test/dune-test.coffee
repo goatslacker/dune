@@ -24,11 +24,21 @@ tests.addBatch
 
 tests.addBatch
   'when running code using dune':
-    topic: ->
-      dune.string 'module.exports = 2', path.join directory, 'nonexistent'
 
-    'number is exported': (r) -> assert.isNumber r
-    'should be 2': (r) -> assert.equal r, 2
+    'and providing a filename':
+      topic: ->
+        dune.string 'module.exports = 2', path.join directory, 'nonexistent'
+
+      'number is exported': (r) -> assert.isNumber r
+      'should be 2': (r) -> assert.equal r, 2
+
+
+    'and not providing a filename':
+      topic: ->
+        dune.string 'module.exports = 2'
+
+      'number is exported': (r) -> assert.isNumber r
+      'should be 2': (r) -> assert.equal r, 2
 
 
 tests.export module

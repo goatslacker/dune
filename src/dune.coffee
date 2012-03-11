@@ -57,7 +57,7 @@ exports.file = (file, sandbox, imports) ->
   exports.string data, file, sandbox, imports
 
 
-exports.string = (data, file, sandbox, imports) ->
+exports.string = (data, file = 'Anonymous', sandbox, imports) ->
   basename = path.basename file
   dirname = path.dirname file
 
