@@ -51,11 +51,15 @@ run = (wrapped, context, imports, filename, dirname) ->
   dune.exports
 
 
-module.exports = (file, sandbox, imports) ->
+exports.file = (file, sandbox, imports) ->
+  data = fs.readFileSync file, 'utf-8'
+
+  exports.string data, file, sandbox, imports
+
+
+exports.string = (data, file, sandbox, imports) ->
   basename = path.basename file
   dirname = path.dirname file
-
-  data = fs.readFileSync file, 'utf-8'
 
   if file.match /.coffee$/
     try
