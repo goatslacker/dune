@@ -1,5 +1,9 @@
 # Dune
 
+> An easy to use VM for loading and running scripts.
+
+You pass it code, it returns back its `module.exports`
+
 ## Install
 
     npm install dune
@@ -28,18 +32,22 @@
 
     assert.equal(exports, 'hello');
 
-NOTE! If using require in your code, you will need to pass in the directory
-where the code should 'live'. Example:
+NOTE! If using node's `require()` in your code, you will need to pass in the full path
+where the code would theoretically be present at. Example:
 
     var assert = require('assert');
     var path = require('path');
 
     var exports = dune.string(
       'module.exports = require("./myfile.js")',
-      path.join(__dirname, 'testfile')
+      path.join(__dirname, 'test.vm')
     );
 
     assert.equal(exports, 'hello');
+
+Important: by default `Dune` will not pass in the `process` Object when running scripts in a separate context.
+
+Passing in `process` allows the scripts to prematurely exit your program. You can pass it in explicitly.
 
 ## License
 
