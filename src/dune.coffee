@@ -45,8 +45,7 @@ run = (wrapped, context, imports, filename, dirname) ->
   try
     fn.call fn, dune.exports, imports, dune, filename, dirname
   catch err
-    process.stderr.write err
-    process.stderr.write '\n'
+    throw err
 
   dune.exports
 
