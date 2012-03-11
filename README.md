@@ -6,7 +6,7 @@
 
 ## API
 
-*file()*
+**file()** = (*full_path_to_file*, *optional_context*, *custom_require*) ->
 
     var assert = require('assert');
     var path = require('path');
@@ -20,7 +20,7 @@
     module.exports = 'hello';
 
 
-*sting()*
+**string()** = (*code_to_run*, *path_to_code*, *context*, *custom_require*) ->
 
     var assert = require('assert');
 
