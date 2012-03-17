@@ -9,7 +9,8 @@
   },
   "main": "lib/dune.js",
   "scripts": {
-    "prepublish": "cake build"
+    "prepublish": "cake build",
+    "test": "cake test"
   },
   "dependencies": {},
   "devDependencies": {

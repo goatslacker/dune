@@ -20,6 +20,7 @@ getContext = (sandbox) ->
     UInt32Array: Uint32Array
     Float32Array: Float32Array
     Float64Array: Float64Array
+    process: process
     console: console
   }
 
@@ -38,6 +39,7 @@ run = (wrapped, context, imports, filename, dirname) ->
 
   if context
     context = getContext context
+    context.process.mainModule.filename = filename
     fn = vm.runInNewContext wrapped, context, filename
   else
     fn = vm.runInThisContext wrapped, filename

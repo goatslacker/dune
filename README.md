@@ -45,10 +45,6 @@ where the code would theoretically be present at. Example:
 
     assert.equal(exports, 'hello');
 
-Important: by default `Dune` will not pass in the `process` Object when running scripts in a separate context.
-
-Passing in `process` allows the scripts to prematurely exit your program. You can pass it in explicitly.
-
 ## License
 
 [MIT-LICENSE](http://josh.mit-license.org)
