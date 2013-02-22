@@ -35,7 +35,8 @@ run = (wrapped, context, imports, filename, dirname) ->
   imports ?= (file) ->
     start = file.substring(0, 2)
     file = path.join(dirname, file)  if start is './' or start is '..'
-    require file
+    file = tryFile file
+    exports.file file, {}
 
   if context
     context = getContext context
@@ -50,6 +51,38 @@ run = (wrapped, context, imports, filename, dirname) ->
     throw err
 
   dune.exports
+
+
+statPath = (path) ->
+  try
+    return fs.statSync path
+  catch ex
+    ex
+
+
+loadPackage = (filepath) ->
+  try
+    jsonpath = path.resolve filepath, 'package.json'
+    json = (fs.readFileSync jsonpath).toString()
+    pkg = JSON.parse json
+    pkg.main or 'index.js'
+  catch ex
+    'index.js'
+
+
+tryFile = (filepath) ->
+  stats = statPath filepath
+
+  # try an extension if the filepath has none
+  if stats instanceof Error
+    return tryFile "#{filepath}.js" unless path.extname filepath
+    throw stats
+
+  return filepath unless stats.isDirectory()
+
+  # look for package.json if it's a directory
+  pkg = loadPackage filepath
+  return path.resolve filepath, pkg
 
 
 exports.file = (file, sandbox, imports) ->
