@@ -2,6 +2,7 @@ vm = require 'vm'
 fs = require 'fs'
 path = require 'path'
 Module = require 'module'
+NativeModules = process.binding 'natives'
 { EventEmitter } = require 'events'
 
 getContext = (sandbox) ->
@@ -29,14 +30,68 @@ getContext = (sandbox) ->
   context
 
 
+loadPackage = (filepath) ->
+  try
+    jsonpath = path.resolve filepath, 'package.json'
+    json = (fs.readFileSync jsonpath).toString()
+    pkg = JSON.parse json
+    init = pkg.main or 'index.js'
+    init = "#{init}.js" unless path.extname init
+    init
+  catch ex
+    'index.js'
+
+
+statPath = (path) ->
+  try
+    return fs.statSync path
+  catch ex
+    ex
+
+
+tryFile = (file) ->
+  stats = statPath file
+
+  if stats instanceof Error
+    return false
+
+  return file unless stats.isDirectory()
+
+  # look for package.json if it's a directory
+  pkg = loadPackage file
+  return path.resolve file, pkg
+
+
+findPackage = (filepath) ->
+
+  paths = [filepath]
+  paths.push "#{filepath}.js" unless path.extname filepath
+  paths.push.apply paths, process.mainModule.paths.map (dir) ->
+    path.resolve dir, filepath
+
+  for fullpath in paths
+    file = tryFile fullpath
+    break unless file is false
+
+  file
+
+
+genImports = (dirname) ->
+  (file) ->
+    if NativeModules.hasOwnProperty file
+      exports.string NativeModules[file], file, {}
+    else
+      start = file.substring(0, 2)
+      file = path.join(dirname, file)  if start is './' or start is '..'
+      file = findPackage file
+
+      exports.file file, {}
+
+
 run = (wrapped, context, imports, filename, dirname) ->
   dune = exports: {}
 
-  imports ?= (file) ->
-    start = file.substring(0, 2)
-    file = path.join(dirname, file)  if start is './' or start is '..'
-    file = tryFile file
-    exports.file file, {}
+  imports ?= genImports dirname
 
   if context
     context = getContext context
@@ -53,41 +108,8 @@ run = (wrapped, context, imports, filename, dirname) ->
   dune.exports
 
 
-statPath = (path) ->
-  try
-    return fs.statSync path
-  catch ex
-    ex
-
-
-loadPackage = (filepath) ->
-  try
-    jsonpath = path.resolve filepath, 'package.json'
-    json = (fs.readFileSync jsonpath).toString()
-    pkg = JSON.parse json
-    pkg.main or 'index.js'
-  catch ex
-    'index.js'
-
-
-tryFile = (filepath) ->
-  stats = statPath filepath
-
-  # try an extension if the filepath has none
-  if stats instanceof Error
-    return tryFile "#{filepath}.js" unless path.extname filepath
-    throw stats
-
-  return filepath unless stats.isDirectory()
-
-  # look for package.json if it's a directory
-  pkg = loadPackage filepath
-  return path.resolve filepath, pkg
-
-
 exports.file = (file, sandbox, imports) ->
   data = fs.readFileSync file, 'utf-8'
-
   exports.string data, file, sandbox, imports
 
 
