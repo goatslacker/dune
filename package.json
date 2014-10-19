@@ -1,21 +1,16 @@
 {
-  "author": "Josh Perez <josh@goatslacker.com> (http://www.goatslacker.com)",
   "name": "dune",
-  "description": "Little VM for node.js",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "node.js Module for running node code in a VM",
+  "author": "Josh Perez <josh@goatslacker.com> (http://www.goatslacker.com)",
   "repository": {
     "type": "git",
     "url": "git://github.com/goatslacker/dune.git"
   },
-  "main": "lib/dune.js",
-  "scripts": {
-    "prepublish": "cake build",
-    "test": "cake test"
-  },
+  "main": "lib/dune2.js",
   "dependencies": {},
   "devDependencies": {
-    "vows": "latest",
-    "coffee-script": "latest"
+    "vows": "latest"
   },
   "optionalDependencies": {},
   "engines": {

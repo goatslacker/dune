@@ -1,2 +1,2 @@
-var coffee = require('coffee-script');
-module.exports = coffee;
+var vows = require('vows');
+module.exports = vows;
