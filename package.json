@@ -1,6 +1,6 @@
 {
   "name": "dune",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "node.js Module for running node code in a VM",
   "author": "Josh Perez <josh@goatslacker.com> (http://www.goatslacker.com)",
   "repository": {
